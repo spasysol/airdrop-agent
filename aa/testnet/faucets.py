@@ -49,6 +49,8 @@ def pick(chain: str, name: str = "") -> dict:
 async def claim(b, identity_id: str, chain: str, name: str = "") -> dict:
     f = pick(chain, name)
     kind = policy.chain(chain).get("kind", "evm")
+    # wallets are stored as "sol", policy kind is "solana" — map it
+    kind = {"solana": "sol"}.get(kind, kind)
     ws = db.wallets(identity_id, kind)
     if not ws:
         raise Denied(f"identity has no {kind} wallet")
